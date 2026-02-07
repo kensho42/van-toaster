@@ -1,12 +1,14 @@
 # Van Toaster
 
-A Sonner-inspired toast component port for [VanJS](https://github.com/vanjs-org/van).
+A Sonner-inspired toast library with a framework-agnostic core runtime.
 
 ## Install
 
 ```bash
 bun add van-toaster
 ```
+
+No framework peer dependencies are required for core usage.
 
 ## Usage
 
@@ -58,6 +60,8 @@ bun run build
 - `/` (main demo)
 - `/alt-demo.html` (alternate demo)
 
+Demo apps use [VanJS](https://github.com/vanjs-org/van) for showcasing controls and integration patterns.
+
 ## Attribution
 
-Van Toaster is an independent VanJS port inspired by [Sonner](https://github.com/emilkowalski/sonner).
+Van Toaster is an independent implementation inspired by [Sonner](https://github.com/emilkowalski/sonner).
