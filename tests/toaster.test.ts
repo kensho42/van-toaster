@@ -242,11 +242,11 @@ describe("toaster dom", () => {
     const list = document.querySelector("[data-van-toaster]") as HTMLElement;
     list.dispatchEvent(new window.Event("mouseenter", { bubbles: true }));
 
-    await sleep(140);
+    await sleep(320);
     expect(document.querySelectorAll("[data-van-toast]").length).toBe(1);
 
     list.dispatchEvent(new window.Event("mouseleave", { bubbles: true }));
-    await sleep(260);
+    await sleep(320);
     expect(document.querySelectorAll("[data-van-toast]").length).toBe(0);
   });
 

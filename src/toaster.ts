@@ -119,6 +119,8 @@ class ToasterInstance {
   private lists = new Map<Position, HTMLOListElement>();
   private expanded = false;
   private interacting = false;
+  private hovering = false;
+  private hoveredLists = new Set<HTMLOListElement>();
   private isSyncing = false;
   private syncQueued = false;
   private actualTheme: "light" | "dark";
@@ -318,7 +320,7 @@ class ToasterInstance {
   }
 
   isPaused(): boolean {
-    return this.expanded || this.interacting || this.isDocumentHidden;
+    return this.expanded || this.interacting || this.hovering || this.isDocumentHidden;
   }
 
   isExpanded(): boolean {
@@ -355,6 +357,22 @@ class ToasterInstance {
     }
 
     this.interacting = interacting;
+    this.sync();
+  }
+
+  private setListHoverState(list: HTMLOListElement, hovering: boolean): void {
+    if (hovering) {
+      this.hoveredLists.add(list);
+    } else {
+      this.hoveredLists.delete(list);
+    }
+
+    const nextHovering = this.hoveredLists.size > 0;
+    if (this.hovering === nextHovering) {
+      return;
+    }
+
+    this.hovering = nextHovering;
     this.sync();
   }
 
@@ -407,6 +425,9 @@ class ToasterInstance {
 
       if (positionToasts.length === 0) {
         const existingList = this.lists.get(position);
+        if (existingList) {
+          this.setListHoverState(existingList, false);
+        }
         existingList?.remove();
         this.lists.delete(position);
         continue;
@@ -482,6 +503,7 @@ class ToasterInstance {
     }
     this.views.clear();
     for (const list of this.lists.values()) {
+      this.setListHoverState(list, false);
       list.remove();
     }
     this.lists.clear();
@@ -509,14 +531,24 @@ class ToasterInstance {
 
     const list = createElement("ol", { tabIndex: -1 });
 
-    list.addEventListener("mouseenter", () => this.setExpanded(true));
-    list.addEventListener("mousemove", () => this.setExpanded(true));
+    list.addEventListener("mouseenter", () => {
+      this.setListHoverState(list, true);
+      this.setExpanded(true);
+    });
+    list.addEventListener("mousemove", () => {
+      this.setListHoverState(list, true);
+      this.setExpanded(true);
+    });
     list.addEventListener("mouseleave", () => {
+      this.setListHoverState(list, false);
       if (!this.interacting) {
         this.setExpanded(false);
       }
     });
-    list.addEventListener("dragend", () => this.setExpanded(false));
+    list.addEventListener("dragend", () => {
+      this.setListHoverState(list, false);
+      this.setExpanded(false);
+    });
 
     list.addEventListener("pointerdown", (event) => {
       const target = getTargetElement(event.target);
