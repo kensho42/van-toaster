@@ -1,0 +1,54 @@
+{
+  "name": "van-toaster",
+  "version": "0.1.0",
+  "description": "A Sonner-inspired toast component port for VanJS",
+  "license": "MIT",
+  "type": "module",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/kren/van-toaster"
+  },
+  "homepage": "https://github.com/kren/van-toaster#readme",
+  "bugs": {
+    "url": "https://github.com/kren/van-toaster/issues"
+  },
+  "keywords": ["vanjs", "toast", "toaster", "notification", "sonner"],
+  "files": ["dist"],
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./style.css": "./dist/style.css"
+  },
+  "sideEffects": ["*.css"],
+  "scripts": {
+    "dev": "vite",
+    "dev:demo": "vite --open /",
+    "dev:demo:alt": "vite --open /alt-demo.html",
+    "build:demo": "vite build",
+    "build:lib": "vite build -c vite.lib.config.ts",
+    "build:types": "tsc -p tsconfig.build.json",
+    "copy:css": "cp src/style.css dist/style.css",
+    "build": "bun run clean && bun run build:lib && bun run minify:lib && bun run build:types && bun run copy:css && bun run build:demo",
+    "clean": "rm -rf dist demo-dist",
+    "minify:lib": "esbuild dist/index.js --minify --format=esm --sourcemap --allow-overwrite --outfile=dist/index.js",
+    "lint": "biome check .",
+    "format": "biome format --write .",
+    "test": "bun test",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "check": "bun run lint && bun run test && bun run typecheck"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "^1.9.4",
+    "@types/bun": "latest",
+    "@types/jsdom": "^21.1.7",
+    "jsdom": "^26.0.0",
+    "typescript": "^5.7.3",
+    "vanjs-core": "^1.5.5",
+    "vite": "^6.0.7"
+  }
+}
