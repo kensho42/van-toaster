@@ -8,6 +8,8 @@ export default defineConfig({
       formats: ["es"],
       fileName: "index",
     },
+    minify: "esbuild",
+    cssMinify: true,
     sourcemap: true,
     target: "es2022",
     outDir: "dist",
